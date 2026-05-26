@@ -1,0 +1,49 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Ragnarok Invictus"
+run/main_scene="uid://cv3m8xp7ykq2n"
+config/features=PackedStringArray("4.4", "Forward Plus")
+config/icon="res://icon.svg"
+config/run/main_scene="res://scenes/test/test_level.tscn"
+
+[autoload]
+
+InputSetup="*res://src/autoload/input_setup.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
+[input]
+
+move_left={
+"deadzone": 0.2,
+"events": []
+}
+move_right={
+"deadzone": 0.2,
+"events": []
+}
+jump={
+"deadzone": 0.2,
+"events": []
+}
+run={
+"deadzone": 0.2,
+"events": []
+}
+dodge={
+"deadzone": 0.2,
+"events": []
+}

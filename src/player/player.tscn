@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3 uid="uid://do0cy5mvm5y4x"]
+
+[ext_resource type="Script" uid="uid://cg3col27niq20" path="res://src/player/player.gd" id="1_q3m7x"]
+[ext_resource type="Script" uid="uid://qxug2g74sgli" path="res://src/combat/hitbox.gd" id="2_hitbox"]
+[ext_resource type="Script" uid="uid://btk7jsdnolgxx" path="res://src/combat/hurtbox.gd" id="3_hurtbox"]
+[ext_resource type="Script" uid="uid://bploay2cr0s50" path="res://src/combat/combat_component.gd" id="4_combat"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_k9p2w"]
+radius = 20.0
+height = 80.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_attack"]
+size = Vector2(52, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(36, 80)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_q3m7x")
+walk_speed = 300.0
+run_speed = 500.0
+jump_velocity = -500.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_k9p2w")
+
+[node name="Visuals" type="Node2D" parent="."]
+
+[node name="Visual" type="Polygon2D" parent="Visuals"]
+color = Color(0.529, 0.329, 0.816, 1)
+polygon = PackedVector2Array(-18, -40, 18, -40, 18, 40, -18, 40)
+
+[node name="AttackHitbox" type="Area2D" parent="Visuals"]
+script = ExtResource("2_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/AttackHitbox"]
+position = Vector2(44, -10)
+shape = SubResource("RectangleShape2D_attack")
+
+[node name="PlayerHurtbox" type="Area2D" parent="."]
+script = ExtResource("3_hurtbox")
+own_layer_bit = 10
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerHurtbox"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+
+[node name="CombatComponent" type="Node" parent="."]
+script = ExtResource("4_combat")
