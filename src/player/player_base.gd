@@ -28,6 +28,9 @@ extends CharacterBody2D
 @export var dodge_stamina_cost: float = 25.0
 @export var run_stamina_cost: float = 12.0
 
+@export_group("Combat")
+@export var hurt_duration: float = 0.30
+
 # --- State ---
 
 enum State { IDLE, WALK, RUN, JUMP, FALL, DODGE, ATTACK, HURT, DEAD }
@@ -59,6 +62,7 @@ var _dodge_direction: float = 1.0
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _stamina_regen_timer: float = 0.0
+var _hurt_timer: float = 0.0
 
 var _gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 
@@ -73,11 +77,14 @@ func _ready() -> void:
 	_on_ready()
 
 func _physics_process(delta: float) -> void:
+	_tick_hurt(delta)
 	match state:
 		State.DODGE:
 			_process_dodge(delta)
 		State.DEAD:
 			pass
+		State.HURT:
+			velocity.x = move_toward(velocity.x, 0.0, walk_speed * 12.0 * delta)
 		_:
 			_apply_gravity(delta)
 			_process_horizontal(delta)
@@ -184,6 +191,9 @@ func take_damage(amount: float) -> void:
 	if health <= 0.0:
 		_set_state(State.DEAD)
 		died.emit()
+	else:
+		_hurt_timer = hurt_duration
+		_set_state(State.HURT)
 
 func modify_godforce(amount: float) -> void:
 	godforce = clamp(godforce + amount, 0.0, max_godforce)
@@ -215,10 +225,17 @@ func _state_to_anim(s: State) -> String:
 		State.JUMP:   return "jump"
 		State.FALL:   return "fall"
 		State.DODGE:  return "dodge"
-		State.ATTACK: return "attack"
+		State.ATTACK: return ""       # CombatComponent calls play_animation directly
 		State.HURT:   return "hurt"
 		State.DEAD:   return "dead"
 		_:            return "idle"
+
+func _tick_hurt(delta: float) -> void:
+	if state != State.HURT:
+		return
+	_hurt_timer -= delta
+	if _hurt_timer <= 0.0:
+		_set_state(State.IDLE)
 
 func _set_facing(facing_right: bool) -> void:
 	if _facing_right == facing_right:
@@ -239,4 +256,4 @@ func _on_facing_changed(_facing_right: bool) -> void:
 
 ## Drive the character's AnimationPlayer or AnimationTree.
 func play_animation(_anim_name: String) -> void:
-	pass
+	pass  # subclass handles playback; empty string = no-op

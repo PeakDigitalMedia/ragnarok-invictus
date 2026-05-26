@@ -8,11 +8,11 @@ enum Phase { IDLE, STARTUP, ACTIVE, RECOVERY }
 # Active:  hitbox is live.
 # Recovery: post-hit window; pressing J here continues the chain.
 const BASIC_ATTACKS = [
-	{startup = 0.08, active = 0.10, recovery = 0.18, damage = 8.0,  stamina = 8.0,  knockback = Vector2(180, -60)},
-	{startup = 0.07, active = 0.10, recovery = 0.16, damage = 10.0, stamina = 8.0,  knockback = Vector2(200, -60)},
-	{startup = 0.10, active = 0.12, recovery = 0.22, damage = 15.0, stamina = 8.0,  knockback = Vector2(280, -100)},
+	{startup = 0.08, active = 0.10, recovery = 0.18, damage = 8.0,  stamina = 8.0,  knockback = Vector2(180, -60),  anim = "attack_1"},
+	{startup = 0.07, active = 0.10, recovery = 0.16, damage = 10.0, stamina = 8.0,  knockback = Vector2(200, -60),  anim = "attack_2"},
+	{startup = 0.10, active = 0.12, recovery = 0.22, damage = 15.0, stamina = 8.0,  knockback = Vector2(280, -100), anim = "attack_3"},
 ]
-const POWER_ATTACK = {startup = 0.20, active = 0.12, recovery = 0.35, damage = 28.0, stamina = 20.0, knockback = Vector2(380, -150)}
+const POWER_ATTACK = {startup = 0.20, active = 0.12, recovery = 0.35, damage = 28.0, stamina = 20.0, knockback = Vector2(380, -150), anim = "attack_power"}
 
 var phase: Phase = Phase.IDLE
 
@@ -63,6 +63,7 @@ func _start_attack(data: Dictionary) -> void:
 	_phase_timer = data.startup
 	phase = Phase.STARTUP
 	_player._set_state(PlayerBase.State.ATTACK)
+	_player.play_animation(data.anim)
 
 func _tick(delta: float) -> void:
 	if phase == Phase.IDLE:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://do0cy5mvm5y4x"]
+[gd_scene load_steps=22 format=3 uid="uid://do0cy5mvm5y4x"]
 
 [ext_resource type="Script" uid="uid://cg3col27niq20" path="res://src/player/player.gd" id="1_q3m7x"]
 [ext_resource type="Script" uid="uid://qxug2g74sgli" path="res://src/combat/hitbox.gd" id="2_hitbox"]
@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://bploay2cr0s50" path="res://src/combat/combat_component.gd" id="4_combat"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_k9p2w"]
-radius = 20.0
+radius = 18.0
 height = 80.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_attack"]
@@ -14,6 +14,116 @@ size = Vector2(52, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
 size = Vector2(36, 80)
+
+[sub_resource type="Animation" id="Animation_244u8"]
+resource_name = "idle"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals/Visual:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.529, 0.329, 0.816, 1), Color(0.529, 0.329, 0.816, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_5f2sf"]
+resource_name = "walk"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals/Visual:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.0605723, 0.399492, 0.993155, 1), Color(0.0605723, 0.399492, 0.993155, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_jiejy"]
+resource_name = "run"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals/Visual:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 1, 1, 1), Color(0, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_o822w"]
+resource_name = "jump"
+
+[sub_resource type="Animation" id="Animation_x42xx"]
+resource_name = "fall"
+
+[sub_resource type="Animation" id="Animation_l271a"]
+resource_name = "dodge"
+
+[sub_resource type="Animation" id="Animation_8ydov"]
+resource_name = "attack_1"
+
+[sub_resource type="Animation" id="Animation_ylhto"]
+resource_name = "attack_2"
+
+[sub_resource type="Animation" id="Animation_cwolq"]
+resource_name = "attack_3"
+
+[sub_resource type="Animation" id="Animation_2smqc"]
+resource_name = "attack_power"
+
+[sub_resource type="Animation" id="Animation_rl62b"]
+resource_name = "hurt"
+
+[sub_resource type="Animation" id="Animation_wlj80"]
+resource_name = "dead"
+
+[sub_resource type="Animation" id="Animation_6bm8s"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals/Visual:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.529, 0.329, 0.816, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hrerp"]
+_data = {
+&"RESET": SubResource("Animation_6bm8s"),
+&"attack_1": SubResource("Animation_8ydov"),
+&"attack_2": SubResource("Animation_ylhto"),
+&"attack_3": SubResource("Animation_cwolq"),
+&"attack_power": SubResource("Animation_2smqc"),
+&"dead": SubResource("Animation_wlj80"),
+&"dodge": SubResource("Animation_l271a"),
+&"fall": SubResource("Animation_x42xx"),
+&"hurt": SubResource("Animation_rl62b"),
+&"idle": SubResource("Animation_244u8"),
+&"jump": SubResource("Animation_o822w"),
+&"run": SubResource("Animation_jiejy"),
+&"walk": SubResource("Animation_5f2sf")
+}
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_q3m7x")
@@ -47,6 +157,11 @@ shape = SubResource("RectangleShape2D_hurtbox")
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_hrerp")
+}
 
 [node name="CombatComponent" type="Node" parent="."]
 script = ExtResource("4_combat")
