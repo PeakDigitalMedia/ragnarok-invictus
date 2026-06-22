@@ -10,6 +10,7 @@ extends CharacterBody2D
 @export var walk_speed: float = 220.0
 @export var run_speed: float = 380.0
 @export var jump_velocity: float = -560.0
+@export var double_jump_velocity: float = -480.0
 @export var dodge_speed: float = 620.0
 @export var dodge_duration: float = 0.18
 @export var coyote_time: float = 0.1
@@ -63,6 +64,7 @@ var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _stamina_regen_timer: float = 0.0
 var _hurt_timer: float = 0.0
+var _jumps_remaining: int = 0
 
 var _gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 
@@ -128,6 +130,7 @@ func _process_jump(delta: float) -> void:
 		return
 	if is_on_floor():
 		_coyote_timer = coyote_time
+		_jumps_remaining = 1
 	else:
 		_coyote_timer -= delta
 
@@ -137,9 +140,16 @@ func _process_jump(delta: float) -> void:
 		_jump_buffer_timer -= delta
 
 	if _jump_buffer_timer > 0.0 and _coyote_timer > 0.0:
+		# First jump (ground or coyote)
 		velocity.y = jump_velocity
 		_coyote_timer = 0.0
 		_jump_buffer_timer = 0.0
+		_jumps_remaining = 1
+		_set_state(State.JUMP)
+	elif Input.is_action_just_pressed("jump") and _jumps_remaining > 0 and not is_on_floor() and velocity.y < 0.0:
+		# Double jump
+		velocity.y = double_jump_velocity
+		_jumps_remaining -= 1
 		_set_state(State.JUMP)
 
 	if not is_on_floor():
@@ -251,7 +261,7 @@ func _on_ready() -> void:
 func _on_state_changed(_new_state: State) -> void:
 	pass
 
-func _on_facing_changed(_facing_right: bool) -> void:
+func _on_facing_changed(_facing_right_param: bool) -> void:
 	pass
 
 ## Drive the character's AnimationPlayer or AnimationTree.

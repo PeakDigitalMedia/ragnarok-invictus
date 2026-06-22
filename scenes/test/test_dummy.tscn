@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://byar4mwd2kp3c"]
 
-[ext_resource type="Script" path="res://src/combat/test_dummy.gd" id="1_dummy"]
-[ext_resource type="Script" path="res://src/combat/hurtbox.gd" id="2_hurtbox"]
+[ext_resource type="Script" uid="uid://bl45sbol3anxq" path="res://src/combat/test_dummy.gd" id="1_dummy"]
+[ext_resource type="Script" uid="uid://btk7jsdnolgxx" path="res://src/combat/hurtbox.gd" id="2_hurtbox"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(48, 80)
@@ -9,7 +9,7 @@ size = Vector2(48, 80)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hb"]
 size = Vector2(48, 80)
 
-[node name="TestDummy" type="StaticBody2D"]
+[node name="TestDummy" type="CharacterBody2D"]
 script = ExtResource("1_dummy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
